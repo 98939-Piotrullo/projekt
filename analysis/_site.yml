@@ -8,7 +8,7 @@ navbar:
     - text: "CV"
       href: cv.html
     - text: "Analiza statystyczna danych"
-      href: analiza.html
+      href: Analiza.html
     - text: "Prezentacja"
       href: prezentacja.html
 output:
