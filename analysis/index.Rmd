@@ -8,4 +8,16 @@ editor_options:
   chunk_output_type: console
 ---
 
-Welcome to my research website.
+# Informacje O mnie
+
+## Witaj czytelniku!
+
+Nazywam się **Piotr Rajdowiec** i studiuję **Informatykę i Inżynierię danych** na **Uniwersytecie Przyrodniczym w Poznaniu**.
+
+![Uniwersytet Przyrodniczy w Poznaniu](assets/uniwersytet.jpg)
+
+## Informacje o tej zaawansowanej stronie
+
+Ta strona została stworzona w ramach projektu z podstaw R przy użyciu pakietu **workflowr**, który zapewnia reprodukowalność analizy danych.
+
+Zapraszam do zapoznania się z poszczególnymi sekcjami!

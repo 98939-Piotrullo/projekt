@@ -1,0 +1,73 @@
+---
+title: "CV"
+output: html_document
+---
+
+# Piotr Rajdowiec
+
+**Email:** piotr.rajdowiec@szybki.pl 
+**Telefon:** +48 123 456 789  
+**Github:** https://github.com/98939-Piotrullo
+
+---
+
+## Wykształcenie
+
+**Uniwersytet Przyrodniczy** | Poznań
+*Kierunek: Informatyka i Inżynieria danych*  
+*Okres: 2023 – obecnie*
+
+- Średnia ocen: 4.5
+- Ulubione przedmioty: Język Angielski, Systemy wbudowane, Programowanie w R
+
+---
+
+## Umiejętności
+
+**Programowanie:**
+- R (ggplot2, dplyr, workflowr)
+- C#
+- C++
+- assembly
+- Python
+- PHP
+- Javascript
+- CSS
+- mySQL
+- tSQL
+
+**Języki obce:**
+- Angielski – C1
+- Niemiecki – A2
+- Włoski - Duolingo
+
+**Inne:**
+- Pakiet Microsoft Office
+- Pakiet Canva
+- Praca w zespole
+- Znajomość LLM
+- Analiza danych
+
+---
+
+## Projekty i doświadczenie
+
+**Projekt: Analiza danych o Robieniu niczego vs nie robieniu czegoś**  
+*2025*
+- Przygotowanie i czyszczenie danych w R
+- Wizualizacja wyników w ggplot2
+- Interpretacja statystyczna
+
+**Wolontariat na torze Poznań**  
+*Aktywista przeciwko normom hałasu*
+
+---
+
+## Zainteresowania i hobby
+
+- Dogłębna analiza danych
+- Szymon Stosik
+- Wyścigi
+- Technologia i nowe narzędzia
+- Motoryzacja
+- Stopy żelaza

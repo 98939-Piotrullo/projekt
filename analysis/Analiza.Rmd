@@ -1,0 +1,241 @@
+---
+title: "Analiza przestępczości w Los Angeles (2020-present)"
+output: workflowr::wflow_html
+---
+
+## Opis danych
+
+Zbiór danych który będę analizował pochodzi z **Los Angeles Police Department (LAPD)** i zawiera informacje o zgłoszonych przestępstwach od 2020 roku do 2025 roku. Jest to oficjalny zbiór udostępniany publicznie przez miasto Los Angeles.
+
+Źródło danych: [data.lacity.org](https://data.lacity.org/Public-Safety/Crime-Data-from-2020-to-Present/2nrs-mtv8/about_data)
+
+```{r setup, message=FALSE, warning=FALSE}
+library(dplyr)
+library(ggplot2)
+
+# Wczytanie danych
+crime_data <- read.csv("crime_data_sample.csv")
+#crime_data <- read.csv("Crime_Data_from_2020_to_Present.csv")
+# Ze względu na ogromny rozmiar danych (250mb) który przekracza limit 1 pliku na githubie 100mb zdecydowałem się pobrać losową próbkę 80% danych i jedynie 5 kolumn, które będę analizował. Analizę przeprowadziłem też dla pełnego zbioru i wyniki były mocno zbliżone.
+
+#set.seed(123)
+#crime_sample <- crime_data %>%
+#  sample_frac(0.8) %>%  # 80% danych
+#  select(
+#    AREA.NAME,
+#    Crm.Cd.Desc,
+#    Vict.Age,
+#    Vict.Sex,
+#    TIME.OCC
+#  )
+#write.csv(crime_sample, "crime_data_sample.csv", row.names = FALSE)
+
+
+# Sprawdzenie rozmiaru danych
+cat("Początkowy rozmiar danych:", nrow(crime_data), "wierszy,", ncol(crime_data), "kolumn\n")
+cat("Całkowita liczba komórek:", nrow(crime_data) * ncol(crime_data), "\n")
+```
+
+## Czyszczenie i przygotowanie danych do analizy
+
+```{r czyszczenie}
+# Wybieram tylko istotne kolumny - redukujemy liczbę kolumn z 28 do 5 (W danych są kolumny typu description - w większości puste, więc nie są potrzebne do analizy), ten fragment nie jest istotny w przypadku analizy okrojonego zbioru, ponieważ w moim okrojonym zbiorze już wybrałem tylko 5 kolumn, co pokazałem wcześniej.
+crime_clean <- crime_data %>%
+  select(
+    AREA.NAME,          # Dzielnica
+    Crm.Cd.Desc,        # Typ przestępstwa
+    Vict.Age,           # Wiek ofiary
+    Vict.Sex,           # Płeć ofiary
+    TIME.OCC            # Godzina
+  )
+
+cat("Po wyborze kolumn:", nrow(crime_clean), "wierszy,", ncol(crime_clean), "kolumn\n")
+
+# Usunięcie wierszy z brakującymi danymi w kluczowych kolumnach
+crime_clean <- crime_clean %>%
+  filter(
+    !is.na(AREA.NAME),
+    !is.na(Crm.Cd.Desc),
+    AREA.NAME != "",
+    Crm.Cd.Desc != ""
+  ) %>%
+  # Przetworzenie czasu
+  mutate(
+    hour = TIME.OCC %/% 100,  # Wyciągnięcie godziny z formatu HHMM
+    # Kategoryzacja pory dnia
+    time_of_day = case_when(
+      hour >= 6 & hour < 12 ~ "Rano",
+      hour >= 12 & hour < 18 ~ "Popoludnie",
+      hour >= 18 & hour < 24 ~ "Wieczor",
+      TRUE ~ "Noc"
+    )
+  ) %>%
+  # Usunięcie nietypowych wartości wieku (zostawiamy tylko sensowne)
+  filter(Vict.Age > 0, Vict.Age < 120)
+
+cat("Po czyszczeniu:", nrow(crime_clean), "wierszy\n")
+cat("Usunięto", nrow(crime_data) - nrow(crime_clean), "wierszy\n")
+cat("Redukcja komórek:", 
+    (nrow(crime_data) * ncol(crime_data) - nrow(crime_clean) * ncol(crime_clean)),
+    "komórek\n")
+```
+
+## Podstawowe statystyki
+
+```{r statystyki}
+# Najczęstsze typy przestępstw
+top_crimes <- crime_clean %>%
+  count(Crm.Cd.Desc, sort = TRUE) %>%
+  head(10)
+
+print(top_crimes)
+
+# Statystyki według dzielnic
+area_stats <- crime_clean %>%
+  group_by(AREA.NAME) %>%
+  summarise(
+    liczba_przestepstw = n(),
+    sredni_wiek_ofiary = round(mean(Vict.Age, na.rm = TRUE), 1)
+  ) %>%
+  arrange(desc(liczba_przestepstw)) %>%
+  head(10)
+
+print(area_stats)
+```
+
+## Wizualizacje
+
+### Wykres 1: Top 10 najczęstszych przestępstw
+
+```{r wykres1, fig.width=10, fig.height=6}
+top_10_crimes <- crime_clean %>%
+  count(Crm.Cd.Desc, sort = TRUE) %>%
+  head(10) %>%
+  mutate(Crm.Cd.Desc = reorder(Crm.Cd.Desc, n))
+
+ggplot(top_10_crimes, aes(x = Crm.Cd.Desc, y = n, fill = Crm.Cd.Desc)) +
+  geom_col() +
+  coord_flip() +
+  labs(
+    title = "Top 10 najczęstszych przestępstw w Los Angeles",
+    x = "Typ przestępstwa",
+    y = "Liczba zgłoszeń"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  scale_y_continuous(labels = scales::comma)
+```
+
+**Interpretacja:** Kradzież tożsamości i kradzież pojazdów to najczęściej zgłaszane przestępstwa w LA. Dominują przestępstwa majątkowe.
+
+### Wykres 2: Przestępstwa według pory dnia
+
+```{r wykres2, fig.width=10, fig.height=6}
+time_crimes <- crime_clean %>%
+  count(time_of_day) %>%
+  mutate(time_of_day = factor(time_of_day, 
+                               levels = c("Rano", "Popoludnie", "Wieczor", "Noc")))
+
+ggplot(time_crimes, aes(x = time_of_day, y = n, fill = time_of_day)) +
+  geom_col() +
+  labs(
+    title = "Rozkład przestępstw według pory dnia",
+    x = "Pora dnia",
+    y = "Liczba przestępstw"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  scale_y_continuous(labels = scales::comma)
+```
+
+**Interpretacja:** Najwięcej przestępstw ma miejsce w ciągu dnia - popołudniu i rano. Najmniej przestępstw odnotowuje się w nocy, co może być związane z mniejszą aktywnością ludzi.
+
+### Wykres 3: Dzielnice z największą przestępczością
+
+```{r wykres3, fig.width=10, fig.height=6}
+top_areas <- crime_clean %>%
+  count(AREA.NAME, sort = TRUE) %>%
+  head(10) %>%
+  mutate(AREA.NAME = reorder(AREA.NAME, n))
+
+ggplot(top_areas, aes(x = AREA.NAME, y = n, fill = AREA.NAME)) +
+  geom_col() +
+  coord_flip() +
+  labs(
+    title = "Dzielnice Los Angeles z największą liczbą przestępstw",
+    x = "Dzielnica",
+    y = "Liczba zgłoszeń"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  scale_y_continuous(labels = scales::comma)
+```
+
+**Interpretacja:** Central (centrum miasta), 77th Street i Pacific to dzielnice o najwyższej przestępczości. Może to wynikać z większej gęstości zaludnienia i charakteru obszarów miejskich.
+
+## Dodatkowa analiza: Rozkład wieku ofiar
+
+```{r wiek_analiza}
+# Statystyki wieku
+age_stats <- crime_clean %>%
+  filter(!is.na(Vict.Age)) %>%
+  summarise(
+    srednia = round(mean(Vict.Age), 1),
+    mediana = median(Vict.Age),
+    min = min(Vict.Age),
+    max = max(Vict.Age)
+  )
+
+print(age_stats)
+```
+
+```{r wykres4, fig.width=10, fig.height=6}
+crime_clean %>%
+  filter(!is.na(Vict.Age)) %>%
+  ggplot(aes(x = Vict.Age)) +
+  geom_histogram(bins = 40, fill = "coral", color = "black", alpha = 0.7) +
+  labs(
+    title = "Rozkład wieku ofiar przestępstw",
+    x = "Wiek ofiary",
+    y = "Liczba przypadków"
+  ) +
+  theme_minimal() +
+  scale_y_continuous(labels = scales::comma)
+```
+
+**Interpretacja:** Średni wiek ofiary to około 39-40 lat. Najwięcej ofiar ma od 25 do 50 lat, co może być pośrednio związane z większą aktywnością tej grupy wiekowej w życiu publicznym i zawodowym.
+
+## Podsumowanie
+
+Analiza danych o przestępczości w Los Angeles wykazała, że:
+
+1. **Najczęstsze przestępstwa** to kradzieże tożsamości i pojazdów
+2. **Pora dnia:** Większość przestępstw ma miejsce w ciągu dnia (popołudnie i rano)
+3. **Dzielnice:** Centrum miasta i 77th Street to obszary o najwyższej przestępczości
+4. **Ofiary:** Średni wiek ofiary to około 39-40 lat
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
