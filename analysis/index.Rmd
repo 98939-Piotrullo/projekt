@@ -18,6 +18,6 @@ Nazywam się **Piotr Rajdowiec** i studiuję **Informatykę i Inżynierię danyc
 
 ## Informacje o tej zaawansowanej stronie
 
-Ta strona została stworzona w ramach projektu z podstaw R przy użyciu pakietu **workflowr**, który zapewnia reprodukowalność analizy danych.
+Ta strona została stworzona w R przy użyciu pakietu **workflowr**, który zapewnia **reprodukowalność** analizy danych.
 
 Zapraszam do zapoznania się z poszczególnymi sekcjami!

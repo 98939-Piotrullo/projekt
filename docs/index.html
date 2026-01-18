@@ -488,7 +488,7 @@ display: none;
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -497,8 +497,7 @@ workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"><
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -510,8 +509,8 @@ workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"><
 <strong>Last updated:</strong> 2026-01-18
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 2
-<span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 1
+<span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>projekt/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed.">
@@ -531,29 +530,32 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcom98939Piotrulloprojekttree4cd6a8587946f6c58c487b9c9fb68a90f336d180targetblank4cd6a85a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcom98939Piotrulloprojekttree0d8d0496a440e5d119c4a651e8bca1508f60da39targetblank0d8d049a">
 <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/98939-Piotrullo/projekt/tree/4cd6a8587946f6c58c487b9c9fb68a90f336d180" target="_blank">4cd6a85</a>
+<a href="https://github.com/98939-Piotrullo/projekt/tree/0d8d0496a440e5d119c4a651e8bca1508f60da39" target="_blank">0d8d049</a>
 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcom98939Piotrulloprojekttree4cd6a8587946f6c58c487b9c9fb68a90f336d180targetblank4cd6a85a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcom98939Piotrulloprojekttree0d8d0496a440e5d119c4a651e8bca1508f60da39targetblank0d8d049a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development
@@ -562,7 +564,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/98939-Piotrullo/projekt/tree/4cd6a8587946f6c58c487b9c9fb68a90f336d180" target="_blank">4cd6a85</a>.
+<a href="https://github.com/98939-Piotrullo/projekt/tree/0d8d0496a440e5d119c4a651e8bca1508f60da39" target="_blank">0d8d049</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -580,6 +582,10 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    analysis/.Rhistory
+
+Unstaged changes:
+    Modified:   analysis/index.Rmd
+    Modified:   analysis/index.html
 
 </code></pre>
 <p>
@@ -623,6 +629,24 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/98939-Piotrullo/projekt/0d8d0496a440e5d119c4a651e8bca1508f60da39/docs/index.html" target="_blank">0d8d049</a>
+</td>
+<td>
+<a href="mailto:Piotr@AORUS" class="email">Piotr@AORUS</a> MINGW64 ~$
+git config –global user.name
+</td>
+<td>
+2026-01-18
+</td>
+<td>
+Wersja 1.03
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -769,9 +793,9 @@ Start workflowr project.
 </div>
 <div id="informacje-o-tej-zaawansowanej-stronie" class="section level2">
 <h2>Informacje o tej zaawansowanej stronie</h2>
-<p>Ta strona została stworzona w ramach projektu z podstaw R przy użyciu
-pakietu <strong>workflowr</strong>, który zapewnia reprodukowalność
-analizy danych.</p>
+<p>Ta strona została stworzona w R przy użyciu pakietu
+<strong>workflowr</strong>, który zapewnia
+<strong>reprodukowalność</strong> analizy danych.</p>
 <p>Zapraszam do zapoznania się z poszczególnymi sekcjami!</p>
 </div>
 </div>
