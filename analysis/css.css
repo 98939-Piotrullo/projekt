@@ -1,0 +1,11 @@
+.reveal {
+  background-color: #F5E6D3;
+  color: #3D2817;
+}
+
+.reveal h1, .reveal h2, .reveal h3 {
+  color: #3D2817;
+}
+.reveal img {
+  border-radius: 25px;
+}

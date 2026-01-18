@@ -1,0 +1,159 @@
+---
+title: "Moje pasje i zainteresowania"
+author: "Piotr Rajdowiec"
+format: 
+  revealjs:
+    theme: simple
+    transition: slide
+    css: css.css
+---
+## Kim jestem?
+![](assets/fotka.jpg){width=70%}
+
+- Studentem Informatyki i Inżynierii danych na Uniwersytecie Przyrodniczym w Poznaniu
+- Pasjonatem dogłębnej analizy danych i kolorowych wykresów
+- Fanatykiem motoryzacji, technologii i elektroniki
+
+
+
+## Moje mniej oczywiste zainteresowania
+
+::: {.incremental}
+- Naprawianie i modyfikowanie elektroniki
+- Tworzenie muzyki
+- Tworzenie muzyki na zmodyfikowanej elektronice
+![](assets/junk_filter.jpg){width=20%}
+![](assets/casette.jpg){width=70%}
+:::
+
+## Ulubione narzędzia do pracy przy motocyklu
+```{r}
+#| echo: false
+#| fig-height: 6
+#| fig-width: 10
+library(ggplot2)
+tools <- data.frame(
+  narzedzie = c("Młotek", "Klucz nasadowy", "Klucz imbusowy", "Śrubokręt", "Klucz dynamometryczny"),
+  ocena = c(3, 10, 7, 6, 1)
+)
+ggplot(tools, aes(x = narzedzie, y = ocena, fill = narzedzie)) +
+  geom_col() +
+  theme_minimal() +
+  labs(title = "Moja subiektywna ocena (1-10)")
+```
+
+**Klucze nasadowe** są najlepsze - bez dyskusji.
+
+## Co lubię w R?
+
+1. **Powtarzalność i modułowość kodu** - wszystko jest powtarzalne w chunkach (o ile działa)
+2. **Pakiet ggplot2** - piękne wykresy, dużo możliwości dostosowania, lepsze od *pyplot*
+3. **Pakiet dplyr** - możliwość przetwarzania danych na różne sposoby, stosunkowo intuicyjna biblioteka
+4. **Duża społeczność** - koledzy z kierunku też piszą w R
+
+## Mój ulubiony wykres
+```{r}
+library(ggplot2)
+library(dplyr)
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+crime_data <- read.csv("crime_data_sample.csv")
+crime_data %>%
+  count(AREA.NAME, sort = TRUE) %>%
+  head(5) %>%
+  mutate(AREA.NAME = reorder(AREA.NAME, n)) %>%
+  ggplot(aes(x = AREA.NAME, y = n, fill = AREA.NAME)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_brewer(palette = "Set2") +
+  labs(title = "Top 5 dzielnic z największą przestępczością w L.A.",
+       x = "", y = "Liczba przestępstw") +
+  theme_minimal(base_size = 16) +
+  theme(legend.position = "none",
+        plot.title = element_text(size = 22, face = "bold"))
+```
+**Wniosek:** W Los Angeles jest niebezpiecznie, ale najbardziej w centrum.
+
+## Ciekawostka: Mazda RX4 w zbiorze mtcars
+
+::: {.columns}
+::: {.column width="40%"}
+![](assets/rx4.jpg){width=100%}
+:::
+::: {.column width="60%"}
+```{r}
+#| echo: false
+#| warning: false
+#| fig-height: 5
+#| fig-width: 7
+library(ggplot2)
+library(dplyr)
+data(mtcars)
+
+cars_comparison <- mtcars %>%
+  mutate(car = rownames(mtcars),
+         l_per_100km = 235.214 / mpg,
+         kategoria = case_when(
+           grepl("Mazda RX4", car) ~ "Mazda RX4\n(silnik Wankla 1.3L)",
+           hp >= 100 & hp <= 120 ~ "Inne auta\n(100-120 KM)",
+           TRUE ~ "Pozostałe"
+         )) %>%
+  filter(kategoria != "Pozostałe") %>%
+  group_by(kategoria) %>%
+  summarise(spalanie = mean(l_per_100km))
+
+ggplot(cars_comparison, aes(x = kategoria, y = spalanie, fill = kategoria)) +
+  geom_col(width = 0.6) +
+  geom_text(aes(label = paste0(round(spalanie, 1), " l")), 
+            vjust = -0.5, size = 5, fontface = "bold") +
+  scale_fill_manual(values = c("Mazda RX4\n(silnik Wankla 1.3L)" = "#E63946", "Inne auta\n(100-120 KM)" = "#457B9D")) +
+  labs(
+    title = "Problem silnika Wankla",
+    subtitle = "Moc z małego silnika, kosztem spalania (i żywotności)",
+    x = "",
+    y = "Spalanie (l/100km)"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    plot.subtitle = element_text(size = 11, color = "gray40"),
+    legend.position = "none",
+    axis.text.x = element_text(size = 10, face = "bold")
+  ) +
+  ylim(0, max(cars_comparison$spalanie) * 1.15)
+```
+:::
+:::
+
+## W czym tkwi problem?
+::: {.columns}
+::: {.column width="50%"}
+### Charakterystyka mazdy RX4:
+- Unikalny silnik Wankla (rotacyjny)
+- Lekki, kompaktowy, mocny
+- Mazda jedynym producentem, który go opanował
+:::
+::: {.column width="50%"}
+### Dlaczego się NIE przyjął?
+- Katastrofalne spalanie przy nieekonomicznej jeździe
+- Problemy z uszczelkami (apex seals)
+- Kryzys naftowy lat 70.
+- Koszty produkcji i serwisu (remont silnika co 60 tysięcy kilometrów)
+:::
+:::
+## Plany na przyszłość
+
+- Ukończenie studiów!
+- Praca w obszarze IT
+- Rozwój umiejętności w moich hobby
+- Projekty open source
+
+## Dziękuję za uwagę!
+
+**Kontakt:**  
+- piotr.rajdowiec@szybki.pl - nie korzystajcie z tego maila, jest fikcyjny
+
+**Prezentacja stworzona w Quarto**
+
+
